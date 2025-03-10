@@ -1,5 +1,12 @@
-// src/categories/category.entity.ts
-import { Entity, PrimaryGeneratedColumn, Column, ManyToMany } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  OneToMany,
+  ManyToMany,
+  JoinColumn,
+} from 'typeorm';
 import { Event } from '../../events/entities/event.entity';
 
 @Entity('categories')
@@ -10,8 +17,17 @@ export class Category {
   @Column({ length: 100, unique: true })
   name: string;
 
-  @Column({ nullable: true })
-  parent_category_id: number;
+  // La relation avec la catégorie parente
+  @ManyToOne(() => Category, (category) => category.children, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'parent_category_id' })
+  parent: Category;
+
+  // Les sous-catégories
+  @OneToMany(() => Category, (category) => category.parent)
+  children: Category[];
 
   @ManyToMany(() => Event, (event) => event.categories)
   events: Event[];
