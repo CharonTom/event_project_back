@@ -10,10 +10,22 @@ import {
 export class CreateUserDto {
   @IsNotEmpty()
   @IsString()
+  @Transform(({ value }) => {
+    if (typeof value === 'number') {
+      return value.toString();
+    }
+    return value;
+  })
   first_name: string;
 
   @IsNotEmpty()
   @IsString()
+  @Transform(({ value }) => {
+    if (typeof value === 'number') {
+      return value.toString();
+    }
+    return value;
+  })
   last_name: string;
 
   @IsNotEmpty()
