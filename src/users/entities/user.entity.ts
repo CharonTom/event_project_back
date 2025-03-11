@@ -18,7 +18,7 @@ export class User {
   email: string;
 
   @Column({ length: 255 })
-  password_hash: string;
+  password: string;
 
   @Column({
     type: 'enum',
