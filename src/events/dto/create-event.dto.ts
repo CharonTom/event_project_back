@@ -12,7 +12,11 @@ export class CreateEventDto {
   // Optionnel, car un événement peut être importé d'un autre service
   @IsOptional()
   @IsNumber()
-  user_id?: number;
+  event_id?: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  user_id: number;
 
   @IsNotEmpty()
   @IsString()

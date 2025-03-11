@@ -7,6 +7,7 @@ import {
   ManyToMany,
   JoinTable,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Category } from '../../categories/entities/category.entity';
@@ -72,6 +73,6 @@ export class Event {
   })
   categories: Category[];
 
-  @ManyToMany(() => UserCalendar, (userCalendar) => userCalendar.event)
+  @OneToMany(() => UserCalendar, (userCalendar) => userCalendar.event)
   calendars: UserCalendar[];
 }
