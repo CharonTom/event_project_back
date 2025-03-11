@@ -12,9 +12,9 @@ export class CreateUserDto {
   @IsString()
   @Transform(({ value }) => {
     if (typeof value === 'number') {
-      return value.toString();
+      return value.toString().trim();
     }
-    return value;
+    return value.trim();
   })
   first_name: string;
 
@@ -22,15 +22,15 @@ export class CreateUserDto {
   @IsString()
   @Transform(({ value }) => {
     if (typeof value === 'number') {
-      return value.toString();
+      return value.toString().trim();
     }
-    return value;
+    return value.trim();
   })
   last_name: string;
 
   @IsNotEmpty()
   @IsEmail()
-  @Transform(({ value }) => value.toLowerCase())
+  @Transform(({ value }) => value.toLowerCase().trim())
   email: string;
 
   @IsNotEmpty()
