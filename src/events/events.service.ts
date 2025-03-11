@@ -12,12 +12,13 @@ export class EventsService {
     private readonly eventRepository: Repository<Event>, // Repository de Cat
   ) {}
 
-  create(createEventDto: CreateEventDto) {
-    return this.create(createEventDto);
+  async create(createEventDto: CreateEventDto): Promise<Event> {
+    const event = this.eventRepository.create(createEventDto);
+    return await this.eventRepository.save(event);
   }
 
-  findAll() {
-    return this.findAll();
+  async findAll(): Promise<Event[]> {
+    return await this.eventRepository.find();
   }
 
   async findOne(id: number): Promise<Event> {
