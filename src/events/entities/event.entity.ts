@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
 import { Category } from '../../categories/entities/category.entity';
-import { UserCalendar } from '../../user-calendar/entities/user-calendar.entity';
+import { CalendarEvent } from '../../calendar-event/entities/calendar-event.entity';
 
 @Entity('events')
 export class Event {
@@ -49,7 +49,7 @@ export class Event {
   @Column({ type: 'timestamp', nullable: true, onUpdate: 'CURRENT_TIMESTAMP' })
   updated_at: Date;
 
-  // Champs de paiement (fusionnés)
+  // Champs de paiement
   @Column({ type: 'tinyint', default: 0 })
   is_sponsored: boolean;
 
@@ -73,6 +73,7 @@ export class Event {
   })
   categories: Category[];
 
-  @OneToMany(() => UserCalendar, (userCalendar) => userCalendar.event)
-  calendars: UserCalendar[];
+  // Un événement peut être ajouté à 0, 1 ou plusieurs calendriers via la table d'association CalendarEvent
+  @OneToMany(() => CalendarEvent, (calendarEvent) => calendarEvent.event)
+  calendarEvents: CalendarEvent[];
 }
