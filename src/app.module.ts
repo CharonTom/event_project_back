@@ -5,7 +5,6 @@ import { ConfigService } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { EventsModule } from './events/events.module';
 import { CategoriesModule } from './categories/categories.module';
-// import { UserCalendarModule } from './user-calendar/user-calendar.module';
 import { CalendarModule } from './calendar/calendar.module';
 import { CalendarEventModule } from './calendar-event/calendar-event.module';
 
