@@ -18,10 +18,6 @@ export class Event {
   @PrimaryGeneratedColumn()
   event_id: number;
 
-  @ManyToOne(() => User, (user) => user.events, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'user_id' })
-  user: User;
-
   @Column({ length: 255 })
   title: string;
 
@@ -40,7 +36,7 @@ export class Event {
   @Column({ length: 100, nullable: true })
   city: string;
 
-  @Column({ type: 'decimal', precision: 8, scale: 2, default: 0.0 })
+  @Column({ type: 'decimal', precision: 8, scale: 2, default: 0.0 }) // Prix de l'évenement
   price: number;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
@@ -51,7 +47,7 @@ export class Event {
 
   // Champs de paiement
   @Column({ type: 'tinyint', default: 0 })
-  is_sponsored: boolean;
+  is_premium: boolean;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
   paid_amount: number;
@@ -59,8 +55,13 @@ export class Event {
   @Column({ type: 'datetime', nullable: true })
   payment_date: Date;
 
-  @Column({ nullable: true })
-  paid_by_user: number;
+  @ManyToOne(() => User, (user) => user.events, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'user_id' })
+  user: User;
+
+  // Un événement peut être ajouté à 0, 1 ou plusieurs calendriers via la table d'association CalendarEvent
+  @OneToMany(() => CalendarEvent, (calendarEvent) => calendarEvent.event)
+  calendarEvents: CalendarEvent[];
 
   @ManyToMany(() => Category, (category) => category.events)
   @JoinTable({
@@ -72,8 +73,4 @@ export class Event {
     },
   })
   categories: Category[];
-
-  // Un événement peut être ajouté à 0, 1 ou plusieurs calendriers via la table d'association CalendarEvent
-  @OneToMany(() => CalendarEvent, (calendarEvent) => calendarEvent.event)
-  calendarEvents: CalendarEvent[];
 }

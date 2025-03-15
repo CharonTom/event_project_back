@@ -27,6 +27,7 @@ export class UsersService {
     private readonly calendarEventRepository: Repository<CalendarEvent>,
   ) {}
 
+  //----------------------- CRUD basique pour les utilisateurs-----------------------
   async create(createUserDto: CreateUserDto): Promise<User> {
     const user = this.userRepository.create(createUserDto);
 
@@ -62,6 +63,7 @@ export class UsersService {
     await this.userRepository.remove(user);
   }
 
+  //------------------ action sur le calendrier de l'utilisateur ---------------------
   async addEventToCalendar(
     userId: number,
     addEventToCalendarRequestDto: AddEventToCalendarRequestDto, // Accepte le DTO complet
@@ -102,5 +104,37 @@ export class UsersService {
 
     // 5. Enregistrer le CalendarEvent
     return await this.calendarEventRepository.save(calendarEvent);
+  }
+
+  async removeEventFromCalendar(
+    userId: number,
+    eventId: number,
+  ): Promise<void> {
+    // 1. Récupérer l'utilisateur avec son calendrier (assurez-vous que la relation 'calendar' est chargée)
+    const user = await this.findOne(userId);
+    const calendar = user.calendar;
+
+    if (!calendar) {
+      throw new NotFoundException(
+        `Calendar for user with ID ${userId} not found`,
+      );
+    }
+
+    // 2. Chercher l'association CalendarEvent pour cet événement dans le calendrier de l'utilisateur
+    const calendarEvent = await this.calendarEventRepository.findOne({
+      where: {
+        calendar: { calendar_id: calendar.calendar_id },
+        event: { event_id: eventId },
+      },
+    });
+
+    if (!calendarEvent) {
+      throw new NotFoundException(
+        `Event with ID ${eventId} is not found in the user's calendar`,
+      );
+    }
+
+    // 3. Supprimer l'association (ce qui retire l'événement du calendrier)
+    await this.calendarEventRepository.remove(calendarEvent);
   }
 }

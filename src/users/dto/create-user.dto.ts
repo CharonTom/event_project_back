@@ -38,6 +38,6 @@ export class CreateUserDto {
   password: string; // Le mot de passe en clair (à hacher ensuite)
 
   @IsOptional()
-  @IsEnum(['USER', 'ORGANIZER', 'ADMIN'])
-  role?: 'USER' | 'ORGANIZER' | 'ADMIN';
+  @IsEnum(['USER', 'ADMIN'])
+  role?: 'USER' | 'ADMIN';
 }

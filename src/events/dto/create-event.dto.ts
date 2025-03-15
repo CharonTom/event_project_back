@@ -49,7 +49,7 @@ export class CreateEventDto {
   // Champs de paiement (optionnels lors de la création, souvent mis à jour ensuite)
   @IsOptional()
   @IsBoolean()
-  is_sponsored?: boolean;
+  is_premium?: boolean;
 
   @IsOptional()
   @IsNumber()
@@ -58,10 +58,6 @@ export class CreateEventDto {
   @IsOptional()
   @IsDateString()
   payment_date?: Date;
-
-  @IsOptional()
-  @IsNumber()
-  paid_by_user?: number;
 
   // Optionnel : liste des IDs de catégories associées à l'événement
   @IsOptional()

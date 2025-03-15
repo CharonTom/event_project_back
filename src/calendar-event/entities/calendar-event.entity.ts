@@ -14,18 +14,6 @@ export class CalendarEvent {
   @PrimaryGeneratedColumn()
   calendar_event_id: number;
 
-  @ManyToOne(() => Calendar, (calendar) => calendar.events, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'calendar_id' })
-  calendar: Calendar;
-
-  @ManyToOne(() => Event, (event) => event.calendarEvents, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn({ name: 'event_id' })
-  event: Event;
-
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   added_at: Date;
 
@@ -44,4 +32,16 @@ export class CalendarEvent {
 
   @Column({ type: 'datetime', nullable: true })
   reminder_1d_sent_at: Date;
+
+  @ManyToOne(() => Calendar, (calendar) => calendar.events, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'calendar_id' })
+  calendar: Calendar;
+
+  @ManyToOne(() => Event, (event) => event.calendarEvents, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'event_id' })
+  event: Event;
 }

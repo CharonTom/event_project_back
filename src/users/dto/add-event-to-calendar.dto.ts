@@ -1,4 +1,4 @@
-import { IsNumber, IsBoolean, IsOptional } from 'class-validator';
+import { IsNumber, IsBoolean } from 'class-validator';
 
 export class AddEventToCalendarRequestDto {
   @IsNumber()

@@ -28,10 +28,10 @@ export class User {
 
   @Column({
     type: 'enum',
-    enum: ['USER', 'ORGANIZER', 'ADMIN'],
+    enum: ['USER', 'ADMIN'],
     default: 'USER',
   })
-  role: 'USER' | 'ORGANIZER' | 'ADMIN';
+  role: 'USER' | 'ADMIN';
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;
