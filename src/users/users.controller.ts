@@ -37,10 +37,10 @@ export class UsersController {
     return this.usersService.remove(+id);
   }
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
-  }
+  // @Post()
+  // create(@Body() createUserDto: CreateUserDto) {
+  //   return this.usersService.create(createUserDto);
+  // }
 
   //---------------- Action sur les calendrier de l'utilisateur ---------------
   @Post(':userId/calendar/events')

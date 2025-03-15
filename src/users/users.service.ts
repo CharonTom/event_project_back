@@ -16,6 +16,7 @@ import { AddEventToCalendarRequestDto } from './dto/add-event-to-calendar.dto'; 
 
 @Injectable()
 export class UsersService {
+  // Removed duplicate implementation of findOneByEmail
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -50,6 +51,11 @@ export class UsersService {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
     return user;
+  }
+
+  async findOneByEmail(email: string): Promise<User | null> {
+    // Retourne User ou null si pas trouvé
+    return await this.userRepository.findOne({ where: { email } });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
