@@ -12,5 +12,6 @@ import { CalendarEvent } from '../calendar-event/entities/calendar-event.entity'
   imports: [TypeOrmModule.forFeature([User, Calendar, Event, CalendarEvent])],
   providers: [UsersService],
   controllers: [UsersController],
+  exports: [UsersService],
 })
 export class UsersModule {}

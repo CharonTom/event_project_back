@@ -16,7 +16,8 @@ import { AddEventToCalendarRequestDto } from './dto/add-event-to-calendar.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // -------------------Crud basique pour les utilisateurs-----------------
+  // -------------------    Crud basique pour les utilisateurs     -----------------
+
   @Get()
   findAll() {
     return this.usersService.findAll();
@@ -43,6 +44,7 @@ export class UsersController {
   // }
 
   //---------------- Action sur les calendrier de l'utilisateur ---------------
+
   @Post(':userId/calendar/events')
   async addEventToCalendar(
     @Param('userId') userId: string,

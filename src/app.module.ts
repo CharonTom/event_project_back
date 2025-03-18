@@ -1,18 +1,20 @@
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { ConfigService } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtGuard } from './auth/guards/jwt.guard';
+import { JwtStrategy } from './auth/strategy/jwt.strategy';
+
 import { UsersModule } from './users/users.module';
 import { EventsModule } from './events/events.module';
 import { CategoriesModule } from './categories/categories.module';
 import { CalendarModule } from './calendar/calendar.module';
 import { CalendarEventModule } from './calendar-event/calendar-event.module';
 import { AuthModule } from './auth/auth.module';
-import { JwtStrategy } from './auth/strategy/jwt.strategy';
-import { APP_GUARD } from '@nestjs/core';
-import { JwtGuard } from './auth/guards/jwt.guard';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 
 @Module({
   imports: [
