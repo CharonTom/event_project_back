@@ -63,5 +63,5 @@ export class CreateEventDto {
   @IsOptional()
   @IsArray()
   @IsNumber({}, { each: true })
-  category_ids?: number[];
+  category_id?: number[];
 }
