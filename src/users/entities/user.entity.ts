@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Event } from '../../events/entities/event.entity';
 import { Calendar } from '../../calendar/entities/calendar.entity';
+import { Role } from '../../auth/enums/role.enum'; // Assurez-vous que le chemin est correct
 
 @Entity('users')
 export class User {
@@ -28,10 +29,10 @@ export class User {
 
   @Column({
     type: 'enum',
-    enum: ['USER', 'ADMIN'],
-    default: 'USER',
+    enum: Role, // Utilisez l'énumération Role
+    default: Role.User, // Utilisez la valeur par défaut de l'énumération
   })
-  role: 'USER' | 'ADMIN';
+  role: Role; // Utilisez le type Role
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   created_at: Date;

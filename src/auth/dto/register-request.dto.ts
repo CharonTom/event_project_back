@@ -6,6 +6,7 @@ import {
   IsEnum,
   IsOptional,
 } from 'class-validator';
+import { Role } from '../../auth/enums/role.enum';
 
 export class RegisterRequestDto {
   @IsNotEmpty()
@@ -38,6 +39,6 @@ export class RegisterRequestDto {
   password: string; // Le mot de passe en clair (à hacher ensuite)
 
   @IsOptional()
-  @IsEnum(['USER', 'ADMIN'])
-  role?: 'USER' | 'ADMIN';
+  @IsEnum(Role) // Utilisez l'énumération Role
+  role?: Role; // Utilisez le type Role
 }
