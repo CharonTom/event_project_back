@@ -20,7 +20,16 @@ export class RolesGuard implements CanActivate {
       return true;
     }
 
-    // Si l'utilisateur a un des rôles requis, on autorise
-    return roles.includes(user?.role);
+    // Si l'utilisateur a un des rôles requis
+    if (roles.includes(user?.role)) {
+      // Pour les routes qui nécessitent un ID (modification/suppression)
+      if (request.params?.id) {
+        // Un utilisateur normal ne peut modifier/supprimer que son propre compte
+        return user?.id === +request.params.id;
+      }
+      return true;
+    }
+
+    return false;
   }
 }
