@@ -37,14 +37,25 @@ export class EventsService {
     }
 
     // 2. Créer l'événement en associant l'utilisateur et les catégories
-    const event = this.eventRepository.create({
+    const eventData = {
       ...createEventDto,
-      user,
+      user_id: user.user_id,
       categories,
-    });
+    };
 
-    await this.eventRepository.save(event);
-    return event;
+    // Si event_id est fourni, on l'utilise, sinon on laisse TypeORM le générer
+    if (createEventDto.event_id) {
+      eventData['event_id'] = createEventDto.event_id;
+    }
+
+    const event = this.eventRepository.create(eventData);
+    const savedEvent = await this.eventRepository.save(event);
+
+    // 3. Récupérer l'événement avec toutes ses relations
+    return await this.eventRepository.findOne({
+      where: { event_id: savedEvent.event_id },
+      relations: ['user', 'categories'],
+    });
   }
 
   async findAll(): Promise<Event[]> {

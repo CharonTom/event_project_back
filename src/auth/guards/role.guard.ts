@@ -9,34 +9,18 @@ export class RolesGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const roles = this.reflector.get<Role[]>('roles', context.getHandler());
     if (!roles) {
-      return true; // Si aucune restriction de rôle, accès autorisé
+      return true;
     }
 
     const request = context.switchToHttp().getRequest();
-    const user = request.user; // Utilisateur authentifié via JWT
-    const userIdFromParams = parseInt(request.params.id, 10); // ID dans l'URL
-
-    // 🛠 Ajout des logs de debug
-    console.log('Utilisateur authentifié :', user);
-    console.log('Roles attendus :', roles);
-    console.log('Roles utilisateur :', user.roles || user.role);
-    console.log('ID utilisateur JWT :', user?.id);
-    console.log('ID utilisateur URL :', userIdFromParams);
+    const user = request.user;
 
     // Si l'utilisateur est ADMIN, il peut tout faire
-    if (user?.roles?.includes(Role.Admin) || user?.role === Role.Admin) {
+    if (user?.role === Role.Admin) {
       return true;
     }
 
-    // Si l'utilisateur est "user" et veut modifier son propre compte, on autorise
-    if (
-      (user?.roles?.includes(Role.User) || user?.role === Role.User) &&
-      Number(user.id) === userIdFromParams
-    ) {
-      return true;
-    }
-
-    // Sinon, refus d'accès
-    return false;
+    // Si l'utilisateur a un des rôles requis, on autorise
+    return roles.includes(user?.role);
   }
 }

@@ -55,6 +55,9 @@ export class Event {
   @Column({ type: 'datetime', nullable: true })
   payment_date: Date;
 
+  @Column({ nullable: true })
+  user_id: number;
+
   @ManyToOne(() => User, (user) => user.events, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;
