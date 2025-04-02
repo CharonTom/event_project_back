@@ -16,7 +16,6 @@ import { CategoriesModule } from './categories/categories.module';
 import { CalendarModule } from './calendar/calendar.module';
 import { CalendarEventModule } from './calendar-event/calendar-event.module';
 import { AuthModule } from './auth/auth.module';
-import { Roles } from './auth/decorators/roles.decorator';
 
 @Module({
   imports: [
