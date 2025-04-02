@@ -9,11 +9,6 @@ import {
 } from 'class-validator';
 
 export class CreateEventDto {
-  // Optionnel, car un événement peut être importé d'un autre service
-  @IsOptional()
-  @IsNumber()
-  event_id?: number;
-
   @IsNotEmpty()
   @IsString()
   title: string;

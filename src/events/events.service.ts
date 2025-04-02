@@ -43,11 +43,6 @@ export class EventsService {
       categories,
     };
 
-    // Si event_id est fourni, on l'utilise, sinon on laisse TypeORM le générer
-    if (createEventDto.event_id) {
-      eventData['event_id'] = createEventDto.event_id;
-    }
-
     const event = this.eventRepository.create(eventData);
     const savedEvent = await this.eventRepository.save(event);
 
