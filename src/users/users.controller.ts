@@ -59,7 +59,7 @@ export class UsersController {
   //---------------- Action sur les calendrier de l'utilisateur ---------------
 
   @Roles(Role.Admin, Role.User)
-  @UseGuards(JwtGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Post(':userId/calendar/events')
   async addEventToCalendar(
     @Param('userId') userId: string,
