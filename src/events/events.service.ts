@@ -20,7 +20,16 @@ export class EventsService {
     private readonly categoryRepository: Repository<Category>,
   ) {}
 
-  async create(createEventDto: CreateEventDto, user: User) {
+  async create(createEventDto: CreateEventDto, user: any) {
+    // 0. Récupérer l'utilisateur complet
+    const fullUser = await this.userRepository.findOne({
+      where: { user_id: user.id },
+    });
+
+    if (!fullUser) {
+      throw new NotFoundException(`User with ID ${user.id} not found`);
+    }
+
     // 1. Récupérer les catégories si des category_id sont fournis dans le DTO
     let categories: Category[] = [];
     if (createEventDto.category_id && createEventDto.category_id.length > 0) {
@@ -37,16 +46,18 @@ export class EventsService {
     }
 
     // 2. Créer l'événement en associant l'utilisateur et les catégories
-    const eventData = {
+    const event = this.eventRepository.create({
       ...createEventDto,
-      user_id: user.user_id,
-      categories,
-    };
+      user: fullUser,
+      categories: categories,
+      created_at: new Date(),
+      updated_at: new Date(),
+    });
 
-    const event = this.eventRepository.create(eventData);
+    // 3. Sauvegarder l'événement
     const savedEvent = await this.eventRepository.save(event);
 
-    // 3. Récupérer l'événement avec toutes ses relations
+    // 4. Récupérer l'événement avec toutes ses relations
     return await this.eventRepository.findOne({
       where: { event_id: savedEvent.event_id },
       relations: ['user', 'categories'],
