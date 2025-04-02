@@ -15,10 +15,6 @@ export class CreateEventDto {
   event_id?: number;
 
   @IsNotEmpty()
-  @IsNumber()
-  user_id: number;
-
-  @IsNotEmpty()
   @IsString()
   title: string;
 

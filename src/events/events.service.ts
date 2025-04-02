@@ -20,19 +20,12 @@ export class EventsService {
     private readonly categoryRepository: Repository<Category>,
   ) {}
 
-  async create(createEventDto: CreateEventDto) {
-    const user = await this.userRepository.findOne({
-      where: { user_id: createEventDto.user_id },
-    });
-    if (!user) {
-      throw new NotFoundException('Utilisateur non trouvé');
-    }
-
+  async create(createEventDto: CreateEventDto, user: User) {
     // 1. Récupérer les catégories si des category_id sont fournis dans le DTO
     let categories: Category[] = [];
     if (createEventDto.category_id && createEventDto.category_id.length > 0) {
       categories = await this.categoryRepository.findBy({
-        category_id: In(createEventDto.category_id), // Utilisez 'In' pour chercher par plusieurs IDs
+        category_id: In(createEventDto.category_id),
       });
 
       // Vérification que toutes les catégories demandées existent
@@ -47,7 +40,7 @@ export class EventsService {
     const event = this.eventRepository.create({
       ...createEventDto,
       user,
-      categories, // Associez le tableau de catégories à l'événement
+      categories,
     });
 
     await this.eventRepository.save(event);
