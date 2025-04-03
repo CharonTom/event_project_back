@@ -29,8 +29,7 @@ export class CategoriesController {
     return this.categoriesService.create(createCategoryDto);
   }
 
-  @Roles(Role.Admin)
-  @UseGuards(RolesGuard)
+  @Public()
   @Get()
   findAll() {
     return this.categoriesService.findAll();
