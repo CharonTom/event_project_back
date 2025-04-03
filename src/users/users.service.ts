@@ -29,6 +29,7 @@ export class UsersService {
   ) {}
 
   //----------------------- CRUD basique pour les utilisateurs-----------------------
+
   async create(createUserDto: CreateUserDto): Promise<User> {
     const user = this.userRepository.create(createUserDto);
 
@@ -54,7 +55,6 @@ export class UsersService {
   }
 
   async findOneByEmail(email: string): Promise<User | null> {
-    // Retourne User ou null si pas trouvé
     return await this.userRepository.findOne({ where: { email } });
   }
 

@@ -40,7 +40,6 @@ export class AuthService {
       ...user,
       password: hashedPassword,
     });
-    // await this.usersService.create(newUser); <-- SUPPRIMER CETTE LIGNE REDONDANTE
     return this.login(newUser);
   }
 }
