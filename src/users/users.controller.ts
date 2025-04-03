@@ -17,8 +17,6 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Role } from 'src/auth/enums/role.enum';
 import { GetUser } from 'src/auth/decorators/user.decorator';
-import { User } from './entities/user.entity';
-import { JwtGuard } from 'src/auth/guards/jwt.guard';
 
 @Controller('users')
 export class UsersController {
