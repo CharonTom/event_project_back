@@ -88,20 +88,10 @@ export class EventsService {
   async update(id: number, updateEventDto: UpdateEventDto, currentUser: User) {
     const event = await this.findOneWithUser(id);
 
-    const currentUserId = currentUser.user_id;
-    if (
-      currentUser.role !== Role.Admin &&
-      event.user.user_id !== currentUserId
-    ) {
-      throw new ForbiddenException(
-        "Vous n'êtes pas autorisé à modifier cet événement.",
-      );
-    }
-
     const updatedEvent = {
       ...event,
       ...updateEventDto,
-      updated_at: new Date(), // Mise à jour du timestamp
+      updated_at: new Date(),
     };
 
     return this.eventRepository.save(updatedEvent);
@@ -109,8 +99,6 @@ export class EventsService {
 
   async remove(id: number, currentUser: User): Promise<void> {
     const event = await this.findOneWithUser(id);
-
-    // Utilisation d'un fallback pour récupérer l'identifiant
 
     await this.eventRepository.remove(event);
   }
