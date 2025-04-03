@@ -13,7 +13,7 @@ import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { Role } from '../auth/enums/role.enum';
 import { Roles } from '../auth/decorators/roles.decorator';
-import { RolesGuard } from '../auth/guards/role.guard';
+import { EventRolesGuard } from '../auth/guards/event-roles.guard'; // Utilise le nouveau guard
 import { Public } from 'src/auth/decorators/public.decorator';
 import { GetUser } from '../auth/decorators/user.decorator';
 import { User } from '../users/entities/user.entity';
@@ -23,7 +23,7 @@ export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
   @Roles(Role.Admin, Role.User)
-  @UseGuards(RolesGuard)
+  @UseGuards(EventRolesGuard)
   @Post()
   create(@Body() createEventDto: CreateEventDto, @GetUser() user: User) {
     return this.eventsService.create(createEventDto, user);
@@ -38,20 +38,24 @@ export class EventsController {
   @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.eventsService.findOne(+id);
+    return this.eventsService.findOneWithUser(+id);
   }
 
   @Roles(Role.Admin, Role.User)
-  @UseGuards(RolesGuard)
+  @UseGuards(EventRolesGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {
-    return this.eventsService.update(+id, updateEventDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateEventDto: UpdateEventDto,
+    @GetUser() user: User,
+  ) {
+    return this.eventsService.update(+id, updateEventDto, user);
   }
 
   @Roles(Role.Admin, Role.User)
-  @UseGuards(RolesGuard)
+  @UseGuards(EventRolesGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.eventsService.remove(+id);
+  remove(@Param('id') id: string, @GetUser() user: User) {
+    return this.eventsService.remove(+id, user);
   }
 }
