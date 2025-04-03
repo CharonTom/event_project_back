@@ -92,15 +92,8 @@ export class UsersController {
     @Param('eventId') eventId: string,
     @GetUser() currentUser: any,
   ): Promise<{ message: string }> {
-    this.logger.debug(
-      `Current user ID: ${currentUser.id}, Requested user ID: ${userId}`,
-    );
-
     // Vérifier que l'utilisateur connecté est bien celui qui possède le calendrier
     if (currentUser.id !== +userId && currentUser.role !== Role.Admin) {
-      this.logger.warn(
-        `User ${currentUser.id} tried to access calendar of user ${userId}`,
-      );
       throw new ForbiddenException(
         'You can only remove events from your own calendar',
       );
