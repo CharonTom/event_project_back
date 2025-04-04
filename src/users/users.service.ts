@@ -64,9 +64,10 @@ export class UsersService {
     return await this.userRepository.save(updatedUser);
   }
 
-  async remove(id: number): Promise<void> {
+  async remove(id: number): Promise<{ message: string }> {
     const user = await this.findOne(id);
     await this.userRepository.remove(user);
+    return { message: 'User has been succesfully removed' };
   }
 
   //------------------ action sur le calendrier de l'utilisateur ---------------------
@@ -115,7 +116,7 @@ export class UsersService {
   async removeEventFromCalendar(
     userId: number,
     eventId: number,
-  ): Promise<void> {
+  ): Promise<{ message: string }> {
     // 1. Récupérer l'utilisateur avec son calendrier (assurez-vous que la relation 'calendar' est chargée)
     const user = await this.findOne(userId);
     const calendar = user.calendar;
@@ -142,5 +143,6 @@ export class UsersService {
 
     // 3. Supprimer l'association (ce qui retire l'événement du calendrier)
     await this.calendarEventRepository.remove(calendarEvent);
+    return { message: 'Event has been succesfully removed from the calendar' };
   }
 }

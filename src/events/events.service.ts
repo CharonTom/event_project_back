@@ -10,23 +10,21 @@ import { In, Repository } from 'typeorm';
 import { Event } from './entities/event.entity';
 import { User } from '../users/entities/user.entity';
 import { Category } from 'src/categories/entities/category.entity';
-import { Role } from 'src/auth/enums/role.enum';
 
 @Injectable()
 export class EventsService {
   constructor(
     @InjectRepository(Event)
-    private readonly eventRepository: Repository<Event>, // Repository de Cat
+    private readonly eventRepository: Repository<Event>,
 
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
 
-    @InjectRepository(Category) // Injectez le Repository de Category
+    @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
   ) {}
 
   async create(createEventDto: CreateEventDto, user: any) {
-    // 0. Récupérer l'utilisateur complet
     const fullUser = await this.userRepository.findOne({
       where: { user_id: user.id },
     });
@@ -35,7 +33,7 @@ export class EventsService {
       throw new NotFoundException(`User with ID ${user.id} not found`);
     }
 
-    // 1. Récupérer les catégories si des category_id sont fournis dans le DTO
+    // Récupérer les catégories si des category_id sont fournis dans le DTO
     let categories: Category[] = [];
     if (createEventDto.category_id && createEventDto.category_id.length > 0) {
       categories = await this.categoryRepository.findBy({
@@ -65,7 +63,10 @@ export class EventsService {
     // 4. Récupérer l'événement avec toutes ses relations
     return await this.eventRepository.findOne({
       where: { event_id: savedEvent.event_id },
-      relations: ['user', 'categories'],
+      relations: [
+        // 'user',
+        'categories',
+      ],
     });
   }
 
@@ -77,7 +78,7 @@ export class EventsService {
   async findOneWithUser(id: number): Promise<Event> {
     const event = await this.eventRepository.findOne({
       where: { event_id: id },
-      relations: ['user'],
+      // relations: ['user'],
     });
     if (!event) {
       throw new NotFoundException(`Event with ID ${id} not found`);
@@ -97,9 +98,10 @@ export class EventsService {
     return this.eventRepository.save(updatedEvent);
   }
 
-  async remove(id: number, currentUser: User): Promise<void> {
+  async remove(id: number, currentUser: User): Promise<{ message: string }> {
     const event = await this.findOneWithUser(id);
 
     await this.eventRepository.remove(event);
+    return { message: 'Event has been deleted succesfully' };
   }
 }
