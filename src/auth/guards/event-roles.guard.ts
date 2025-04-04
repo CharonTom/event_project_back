@@ -43,7 +43,7 @@ export class EventRolesGuard implements CanActivate {
         `ID d'événement invalide: ${request.params.id}`,
       );
     }
-    console.log('loguser', user, 'logevent', eventId);
+    // console.log('loguser', user, 'logevent', eventId);
 
     // Charge l'événement avec sa relation "user"
     const event = await this.eventRepository.findOne({

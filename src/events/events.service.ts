@@ -75,10 +75,13 @@ export class EventsService {
   }
 
   // Nouvelle méthode pour récupérer l'événement avec son utilisateur associé
-  async findOneWithUser(id: number): Promise<Event> {
+  async findOne(id: number): Promise<Event> {
     const event = await this.eventRepository.findOne({
       where: { event_id: id },
-      // relations: ['user'],
+      relations: [
+        //  'user',
+        'categories',
+      ],
     });
     if (!event) {
       throw new NotFoundException(`Event with ID ${id} not found`);
@@ -86,8 +89,8 @@ export class EventsService {
     return event;
   }
 
-  async update(id: number, updateEventDto: UpdateEventDto, currentUser: User) {
-    const event = await this.findOneWithUser(id);
+  async update(id: number, updateEventDto: UpdateEventDto) {
+    const event = await this.findOne(id);
 
     const updatedEvent = {
       ...event,
@@ -98,8 +101,8 @@ export class EventsService {
     return this.eventRepository.save(updatedEvent);
   }
 
-  async remove(id: number, currentUser: User): Promise<{ message: string }> {
-    const event = await this.findOneWithUser(id);
+  async remove(id: number): Promise<{ message: string }> {
+    const event = await this.findOne(id);
 
     await this.eventRepository.remove(event);
     return { message: 'Event has been deleted succesfully' };

@@ -1,4 +1,9 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Role } from '../enums/role.enum';
 
@@ -25,11 +30,17 @@ export class RolesGuard implements CanActivate {
       // Pour les routes qui nécessitent un ID (modification/suppression)
       if (request.params?.id) {
         // Un utilisateur normal ne peut modifier/supprimer que son propre compte
-        return user?.id === +request.params.id;
+        if (user?.id !== +request.params.id) {
+          throw new ForbiddenException(
+            "Vous n'êtes pas autorisé à modifier ou supprimer ce compte.",
+          );
+        }
       }
       return true;
     }
 
-    return false;
+    throw new ForbiddenException(
+      "Vous n'êtes pas autorisé à accéder à cette ressource.",
+    );
   }
 }

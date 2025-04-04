@@ -38,24 +38,20 @@ export class EventsController {
   @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.eventsService.findOneWithUser(+id);
+    return this.eventsService.findOne(+id);
   }
 
   @Roles(Role.Admin, Role.User)
   @UseGuards(EventRolesGuard)
   @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateEventDto: UpdateEventDto,
-    @GetUser() user: User,
-  ) {
-    return this.eventsService.update(+id, updateEventDto, user);
+  update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {
+    return this.eventsService.update(+id, updateEventDto);
   }
 
   @Roles(Role.Admin, Role.User)
   @UseGuards(EventRolesGuard)
   @Delete(':id')
-  remove(@Param('id') id: string, @GetUser() user: User) {
-    return this.eventsService.remove(+id, user);
+  remove(@Param('id') id: string) {
+    return this.eventsService.remove(+id);
   }
 }
