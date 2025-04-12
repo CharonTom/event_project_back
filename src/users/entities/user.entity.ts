@@ -24,6 +24,9 @@ export class User {
   @Column({ length: 255, unique: true })
   email: string;
 
+  @Column({ length: 25, unique: true })
+  phone: string;
+
   @Column({ length: 255 })
   password: string;
 

@@ -16,6 +16,8 @@ import { CategoriesModule } from './categories/categories.module';
 import { CalendarModule } from './calendar/calendar.module';
 import { CalendarEventModule } from './calendar-event/calendar-event.module';
 import { AuthModule } from './auth/auth.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { ReminderModule } from './reminder/reminder.module';
 
 @Module({
   imports: [
@@ -40,6 +42,8 @@ import { AuthModule } from './auth/auth.module';
     CalendarModule,
     CalendarEventModule,
     AuthModule,
+    ReminderModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [

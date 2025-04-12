@@ -36,6 +36,11 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   @IsString()
+  @Transform(({ value }) => value.toLowerCase().trim())
+  phone: string;
+
+  @IsNotEmpty()
+  @IsString()
   password: string; // Le mot de passe en clair (à hacher ensuite)
 
   @IsOptional()
