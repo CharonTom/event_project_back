@@ -46,7 +46,9 @@ export class UsersService {
   async findOne(id: number): Promise<User> {
     const user = await this.userRepository.findOne({
       where: { user_id: id },
-      relations: ['calendar'],
+      relations: [
+        'calendar.events.event', // chargez les événements liés au calendrier de l'utilisateur
+      ],
     });
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
