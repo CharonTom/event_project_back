@@ -13,6 +13,7 @@ import { Calendar } from '../calendar/entities/calendar.entity';
 import { Event } from '../events/entities/event.entity';
 import { CalendarEvent } from '../calendar-event/entities/calendar-event.entity';
 import { AddEventToCalendarRequestDto } from './dto/add-event-to-calendar.dto'; // Importez le DTO
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
@@ -62,6 +63,12 @@ export class UsersService {
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.findOne(id);
+
+    if (updateUserDto.password) {
+      const salt = await bcrypt.genSalt(10);
+      updateUserDto.password = await bcrypt.hash(updateUserDto.password, salt);
+    }
+
     const updatedUser = { ...user, ...updateUserDto };
     return await this.userRepository.save(updatedUser);
   }
