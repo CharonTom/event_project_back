@@ -5,34 +5,33 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CalendarEvent } from '../calendar-event/entities/calendar-event.entity';
 import { User } from '../users/entities/user.entity';
-// import Twilio from 'twilio';
+import { Twilio } from 'twilio';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ReminderService {
   private readonly logger = new Logger(ReminderService.name);
-  //   private twilioClient: Twilio;
+  private twilioClient: Twilio;
 
   constructor(
     @InjectRepository(CalendarEvent)
     private calendarEventRepository: Repository<CalendarEvent>,
+    private config: ConfigService,
   ) {
-    // Initialisation du client Twilio avec les variables d'environnement
-    // this.twilioClient = new Twilio(
-    //   process.env.TWILIO_ACCOUNT_SID as string,
-    //   process.env.TWILIO_AUTH_TOKEN as string,
-    // );
+    // Instanciation du client Twilio
+    this.twilioClient = new Twilio(
+      this.config.get<string>('TWILIO_ACCOUNT_SID'),
+      this.config.get<string>('TWILIO_AUTH_TOKEN'),
+    );
   }
 
-  //    Planification CRON, vérifie les reminders.
-
-  //   @Cron('*/10 * * * * *')
-  @Cron(CronExpression.EVERY_DAY_AT_8AM)
+  @Cron('0 */1 * * * *') // Exécute toutes les 2 minutes
+  // @Cron(CronExpression.EVERY_DAY_AT_8AM)
   async handleReminders() {
     this.logger.debug(
       'Lancement de la vérification quotidienne des reminders...',
     );
 
-    // Récupération des CalendarEvents qui demandent un rappel
     const calendarEvents = await this.calendarEventRepository.find({
       relations: ['event', 'calendar', 'calendar.user'],
       where: { wants_reminder: true },
@@ -44,73 +43,61 @@ export class ReminderService {
       const eventStartDate = ce.event.start_date;
       const user: User = ce.calendar.user;
 
-      // Vérifier si le rappel 7 jours avant doit être envoyé
+      // 7 jours avant
       if (
         !ce.reminder_7d_sent &&
         this.isReminderDue(eventStartDate, today, 7)
       ) {
-        if (user.phone) {
-          await this.sendReminder(
-            user.phone,
-            ce.event.title,
-            eventStartDate,
-            '7 jours',
-          );
-          ce.reminder_7d_sent = true;
-          ce.reminder_7d_sent_at = new Date();
-          await this.calendarEventRepository.save(ce);
-        } else {
-          this.logger.warn(
-            `L'utilisateur ${user.email} n'a pas de numéro de téléphone.`,
-          );
-        }
+        await this.processReminder(ce, user, eventStartDate, '7 jours');
       }
 
-      // Vérifier si le rappel 1 jour avant doit être envoyé
+      // 1 jour avant
       if (
         !ce.reminder_1d_sent &&
         this.isReminderDue(eventStartDate, today, 1)
       ) {
-        if (user.phone) {
-          await this.sendReminder(
-            user.phone,
-            ce.event.title,
-            eventStartDate,
-            '1 jour',
-          );
-          ce.reminder_1d_sent = true;
-          ce.reminder_1d_sent_at = new Date();
-          await this.calendarEventRepository.save(ce);
-        } else {
-          this.logger.warn(
-            `L'utilisateur ${user.email} n'a pas de numéro de téléphone.`,
-          );
-        }
+        await this.processReminder(ce, user, eventStartDate, '1 jour');
       }
     }
   }
 
-  // Construit le message
-  private async sendReminder(
-    phone: string,
-    eventTitle: string,
-    eventStart: Date,
+  private async processReminder(
+    ce: CalendarEvent,
+    user: User,
+    eventStartDate: Date,
     reminderType: string,
   ) {
-    const messageBody = `Rappel (${reminderType}) : Votre événement "${eventTitle}" aura lieu le ${eventStart.toLocaleString()}.`;
+    if (!user.phone) {
+      this.logger.warn(
+        `L'utilisateur ${user.email} n'a pas de numéro de téléphone.`,
+      );
+      return;
+    }
 
     try {
-      //   await this.twilioClient.messages.create({
-      //     body: messageBody,
-      //     from: process.env.TWILIO_PHONE_NUMBER,
-      //     to: phone,
-      //   });
+      const message = `Rappel : Votre événement "${ce.event.title}" aura lieu le ${eventStartDate.toLocaleString()}.`;
+      await this.twilioClient.messages.create({
+        body: message,
+        from: this.config.get<string>('TWILIO_MESSAGING_SERVICE_SID'),
+        to: user.phone,
+      });
+
+      // Mise à jour de l’entité
+      if (reminderType === '7 jours') {
+        ce.reminder_7d_sent = true;
+        ce.reminder_7d_sent_at = new Date();
+      } else {
+        ce.reminder_1d_sent = true;
+        ce.reminder_1d_sent_at = new Date();
+      }
+      await this.calendarEventRepository.save(ce);
+
       this.logger.log(
-        `SMS envoyé à ${phone} pour l'événement "${eventTitle}" (${reminderType}) with ===> ${messageBody}`,
+        `SMS envoyé à ${user.phone} pour "${ce.event.title}" (${reminderType}). avec pour message : "${message}"`,
       );
     } catch (error) {
       this.logger.error(
-        `Erreur lors de l'envoi du SMS à ${phone} pour l'événement "${eventTitle}" :`,
+        `Erreur lors de l'envoi du SMS à ${user.phone} pour "${ce.event.title}" :`,
         error,
       );
     }
