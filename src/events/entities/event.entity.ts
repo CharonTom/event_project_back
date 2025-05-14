@@ -49,11 +49,11 @@ export class Event {
   @Column({ type: 'tinyint', default: 0 })
   is_premium: boolean;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
-  paid_amount: number;
+  // @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
+  // paid_amount: number;
 
-  @Column({ type: 'datetime', nullable: true })
-  payment_date: Date;
+  // @Column({ type: 'datetime', nullable: true })
+  // payment_date: Date;
 
   @Column({ nullable: true })
   user_id: number;
