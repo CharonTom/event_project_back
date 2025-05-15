@@ -32,7 +32,7 @@ import { ReminderModule } from './reminder/reminder.module';
         password: configService.get<string>('DB_PASSWORD'),
         database: configService.get<string>('DB_NAME'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: true,
+        synchronize: false,
       }),
       inject: [ConfigService],
     }),
