@@ -13,18 +13,31 @@ import { RegisterRequestDto } from './dto/register-request.dto';
 import { LoginResponseDTO } from './dto/login-response.dto';
 import { RegisterResponseDTO } from './dto/register-response.dto';
 import { Public } from './decorators/public.decorator';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 
 @Public()
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @ApiOperation({ summary: 'Authentification utilisateur (login)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Connexion réussie',
+  })
+  @ApiResponse({ status: 400, description: 'Identifiants invalides' })
   @UseGuards(AuthGuard('local'))
   @Post('login')
   async login(@Request() req): Promise<LoginResponseDTO | BadRequestException> {
     return this.authService.login(req.user);
   }
 
+  @ApiOperation({ summary: "Inscription d'un nouvel utilisateur" })
+  @ApiResponse({
+    status: 201,
+    description: 'Inscription réussie',
+  })
+  @ApiResponse({ status: 400, description: 'Données d’inscription invalides' })
   @Post('register')
   async register(
     @Body() registerBody: RegisterRequestDto,

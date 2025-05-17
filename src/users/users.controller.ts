@@ -17,6 +17,15 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Role } from 'src/auth/enums/role.enum';
 import { GetUser } from 'src/auth/decorators/user.decorator';
+import {
+  ApiTags,
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiBody,
+} from '@nestjs/swagger';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -26,6 +35,11 @@ export class UsersController {
 
   // -------------------    Crud basique pour les utilisateurs     -----------------
 
+  @ApiOperation({ summary: 'Récupère la liste de tous les utilisateurs' })
+  @ApiResponse({
+    status: 200,
+    description: 'Liste des utilisateurs retournée avec succès.',
+  })
   @Roles(Role.Admin)
   @UseGuards(RolesGuard)
   @Get()
@@ -33,6 +47,12 @@ export class UsersController {
     return this.usersService.findAll();
   }
 
+  @ApiOperation({ summary: 'Récupère un utilisateur par son ID' })
+  @ApiResponse({
+    status: 200,
+    description: 'Utilisateur trouvé.',
+  })
+  @ApiResponse({ status: 404, description: 'Utilisateur non trouvé.' })
   @Roles(Role.Admin, Role.User)
   @UseGuards(RolesGuard)
   @Get(':id')
@@ -40,6 +60,11 @@ export class UsersController {
     return this.usersService.findOne(+id);
   }
 
+  @ApiOperation({ summary: 'Met à jour un utilisateur existant' })
+  @ApiResponse({
+    status: 200,
+    description: 'Utilisateur mis à jour.',
+  })
   @Roles(Role.Admin, Role.User)
   @UseGuards(RolesGuard)
   @Patch(':id')
@@ -47,6 +72,11 @@ export class UsersController {
     return this.usersService.update(+id, updateUserDto);
   }
 
+  @ApiOperation({ summary: 'Supprime un utilisateur' })
+  @ApiResponse({
+    status: 200,
+    description: 'Utilisateur supprimé avec succès.',
+  })
   @Roles(Role.Admin, Role.User)
   @UseGuards(RolesGuard)
   @Delete(':id')
@@ -55,7 +85,10 @@ export class UsersController {
   }
 
   //---------------- Action sur les calendrier de l'utilisateur ---------------
-
+  @ApiOperation({
+    summary: "Ajoute un événement au calendrier d'un utilisateur",
+  })
+  @ApiResponse({ status: 201, description: 'Événement ajouté au calendrier.' })
   @Roles(Role.Admin, Role.User)
   @UseGuards(RolesGuard)
   @Post(':userId/calendar/events')
@@ -84,6 +117,17 @@ export class UsersController {
     );
   }
 
+  @ApiOperation({
+    summary: "Supprime un événement du calendrier d'un utilisateur",
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Événement supprimé du calendrier.',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Vous ne pouvez supprimer que sur votre propre calendrier.',
+  })
   @Roles(Role.Admin, Role.User)
   @UseGuards(RolesGuard)
   @Delete(':userId/calendar/events/:eventId')

@@ -25,8 +25,8 @@ export class ReminderService {
     );
   }
 
-  @Cron('0 */1 * * * *') // Exécute toutes les 2 minutes
-  // @Cron(CronExpression.EVERY_DAY_AT_8AM)
+  // @Cron('0 */1 * * * *') // Exécute toutes les 2 minutes
+  @Cron(CronExpression.EVERY_DAY_AT_8AM)
   async handleReminders() {
     this.logger.debug(
       'Lancement de la vérification quotidienne des reminders...',
