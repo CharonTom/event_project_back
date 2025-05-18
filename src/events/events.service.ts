@@ -24,7 +24,11 @@ export class EventsService {
     private readonly categoryRepository: Repository<Category>,
   ) {}
 
-  async create(createEventDto: CreateEventDto, user: any) {
+  async create(
+    createEventDto: CreateEventDto,
+    user: any,
+    file?: Express.Multer.File,
+  ) {
     const fullUser = await this.userRepository.findOne({
       where: { user_id: user.id },
     });
@@ -56,6 +60,10 @@ export class EventsService {
       created_at: new Date(),
       updated_at: new Date(),
     });
+
+    if (file) {
+      event.image = `/assets/${file.filename}`;
+    }
 
     // 3. Sauvegarder l'événement
     const savedEvent = await this.eventRepository.save(event);

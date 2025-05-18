@@ -21,6 +21,9 @@ export class Event {
   @Column({ length: 255 })
   title: string;
 
+  @Column({ nullable: true })
+  image: string;
+
   @Column('text')
   description: string;
 

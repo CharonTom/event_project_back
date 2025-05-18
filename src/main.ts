@@ -3,9 +3,13 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { JwtGuard } from './auth/guards/jwt.guard';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import * as express from 'express';
+import { join } from 'path';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.use('/assets', express.static(join(__dirname, '..', 'src/assets')));
 
   const config = new DocumentBuilder()
     .setTitle('API EVENTLY')
@@ -13,7 +17,7 @@ async function bootstrap() {
     .setVersion('1.0')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory);
+  SwaggerModule.setup('api-doc', app, documentFactory);
 
   app.enableCors();
   app.useGlobalGuards(new JwtGuard(app.get(Reflector)));

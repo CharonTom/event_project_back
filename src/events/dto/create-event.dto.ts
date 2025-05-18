@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   IsNotEmpty,
   IsString,
@@ -34,6 +35,7 @@ export class CreateEventDto {
   city?: string;
 
   @IsOptional()
+  @Type(() => Number)
   @IsNumber()
   price?: number;
 
@@ -42,17 +44,10 @@ export class CreateEventDto {
   @IsBoolean()
   is_premium?: boolean;
 
-  @IsOptional()
-  @IsNumber()
-  paid_amount?: number;
-
-  @IsOptional()
-  @IsDateString()
-  payment_date?: Date;
-
   // Optionnel : liste des IDs de catégories associées à l'événement
   @IsOptional()
   @IsArray()
+  @Type(() => Number)
   @IsNumber({}, { each: true })
   category_id?: number[];
 }
