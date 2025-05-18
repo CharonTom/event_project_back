@@ -26,12 +26,16 @@ import {
   ApiBody,
 } from '@nestjs/swagger';
 import { CreateUserDto } from './dto/create-user.dto';
+import { EventsService } from '../events/events.service';
 
 @Controller('users')
 export class UsersController {
   private readonly logger = new Logger(UsersController.name);
 
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly eventsService: EventsService,
+  ) {}
 
   // -------------------    Crud basique pour les utilisateurs     -----------------
 
@@ -82,6 +86,13 @@ export class UsersController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
+  }
+
+  // Afficher tous les événements d'un utilisateur
+  @Get(':id/events')
+  @Roles(Role.Admin, Role.User)
+  async findEventsForUser(@Param('id') id: string) {
+    return this.eventsService.findByUser(+id);
   }
 
   //---------------- Action sur les calendrier de l'utilisateur ---------------

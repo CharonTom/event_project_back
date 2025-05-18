@@ -117,4 +117,11 @@ export class EventsService {
     await this.eventRepository.remove(event);
     return { message: 'Event has been deleted succesfully' };
   }
+
+  async findByUser(userId: number): Promise<Event[]> {
+    return this.eventRepository.find({
+      where: { user: { user_id: userId } },
+      relations: ['categories'], // ou ['categories', 'categories.parent'] si tu veux
+    });
+  }
 }

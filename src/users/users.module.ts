@@ -7,9 +7,13 @@ import { User } from './entities/user.entity';
 import { Calendar } from '../calendar/entities/calendar.entity';
 import { Event } from '../events/entities/event.entity';
 import { CalendarEvent } from '../calendar-event/entities/calendar-event.entity';
+import { EventsModule } from 'src/events/events.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Calendar, Event, CalendarEvent])],
+  imports: [
+    TypeOrmModule.forFeature([User, Calendar, Event, CalendarEvent]),
+    EventsModule,
+  ],
   providers: [UsersService],
   controllers: [UsersController],
   exports: [UsersService],

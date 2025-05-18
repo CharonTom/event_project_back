@@ -10,5 +10,6 @@ import { Category } from 'src/categories/entities/category.entity';
   imports: [TypeOrmModule.forFeature([Event, User, Category])],
   controllers: [EventsController],
   providers: [EventsService],
+  exports: [EventsService],
 })
 export class EventsModule {}
