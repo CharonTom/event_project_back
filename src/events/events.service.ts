@@ -79,7 +79,9 @@ export class EventsService {
   }
 
   async findAll(): Promise<Event[]> {
-    return await this.eventRepository.find();
+    return this.eventRepository.find({
+      relations: ['categories', 'categories.parent'],
+    });
   }
 
   // Nouvelle méthode pour récupérer l'événement avec son utilisateur associé
