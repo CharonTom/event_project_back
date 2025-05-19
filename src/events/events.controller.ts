@@ -71,8 +71,30 @@ export class EventsController {
   @Roles(Role.Admin, Role.User)
   @UseGuards(EventRolesGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEventDto: UpdateEventDto) {
-    return this.eventsService.update(+id, updateEventDto);
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: './src/assets',
+        filename: (_req, file, cb) => {
+          const name = Date.now() + '-' + Math.round(Math.random() * 1e9);
+          cb(null, `${name}-${file.originalname}`);
+        },
+      }),
+      fileFilter: (_req, file, cb) => {
+        if (!file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
+          return cb(new Error('Seules les images sont autorisées'), false);
+        }
+        cb(null, true);
+      },
+      limits: { fileSize: 5 * 1024 * 1024 },
+    }),
+  )
+  update(
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
+    @Body() updateEventDto: UpdateEventDto,
+  ) {
+    return this.eventsService.update(+id, updateEventDto, file);
   }
 
   @Roles(Role.Admin, Role.User)

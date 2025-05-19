@@ -99,16 +99,23 @@ export class EventsService {
     return event;
   }
 
-  async update(id: number, updateEventDto: UpdateEventDto) {
+  async update(
+    id: number,
+    updateEventDto: UpdateEventDto,
+    file?: Express.Multer.File,
+  ): Promise<Event> {
     const event = await this.findOne(id);
 
-    const updatedEvent = {
-      ...event,
-      ...updateEventDto,
-      updated_at: new Date(),
-    };
+    // On applique d'abord les champs modifiés
+    Object.assign(event, updateEventDto);
+    event.updated_at = new Date();
 
-    return this.eventRepository.save(updatedEvent);
+    // Si un nouveau fichier image est uploadé, on met à jour son chemin
+    if (file) {
+      event.image = `/assets/${file.filename}`;
+    }
+
+    return this.eventRepository.save(event);
   }
 
   async remove(id: number): Promise<{ message: string }> {
