@@ -26,6 +26,8 @@ export class AuthController {
     description: 'Connexion réussie',
   })
   @ApiResponse({ status: 400, description: 'Identifiants invalides' })
+
+  //-------------------------- Séparation des décorateurs Swagger  --------------------------
   @UseGuards(AuthGuard('local'))
   @Post('login')
   async login(@Request() req): Promise<LoginResponseDTO | BadRequestException> {
@@ -38,6 +40,8 @@ export class AuthController {
     description: 'Inscription réussie',
   })
   @ApiResponse({ status: 400, description: 'Données d’inscription invalides' })
+
+  //-------------------------- Séparation des décorateurs Swagger  --------------------------
   @Post('register')
   async register(
     @Body() registerBody: RegisterRequestDto,
