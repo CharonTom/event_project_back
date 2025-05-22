@@ -21,11 +21,14 @@ import { GetUser } from '../auth/decorators/user.decorator';
 import { User } from '../users/entities/user.entity';
 import { diskStorage } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @Controller('events')
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
+  @ApiOperation({ summary: 'Créer un nouvel événement' })
+  @ApiResponse({ status: 201, description: 'Événement créé avec succès.' })
   @Roles(Role.Admin, Role.User)
   @UseGuards(EventRolesGuard)
   @Post()
@@ -56,18 +59,29 @@ export class EventsController {
     return this.eventsService.create(createEventDto, user, file);
   }
 
+  @ApiOperation({ summary: 'Récupérer la liste de tous les événements' })
+  @ApiResponse({ status: 200, description: 'Liste des événements renvoyée.' })
   @Public()
   @Get()
   findAll() {
     return this.eventsService.findAll();
   }
 
+  @ApiOperation({ summary: 'Récupérer un événement par son ID' })
+  @ApiResponse({ status: 200, description: 'Événement trouvé et renvoyé.' })
   @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.eventsService.findOne(+id);
   }
 
+  @ApiOperation({
+    summary: 'Mettre à jour un événement existant',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Événement mis à jour avec succès.',
+  })
   @Roles(Role.Admin, Role.User)
   @UseGuards(EventRolesGuard)
   @Patch(':id')
@@ -97,6 +111,8 @@ export class EventsController {
     return this.eventsService.update(+id, updateEventDto, file);
   }
 
+  @ApiOperation({ summary: 'Supprimer un événement par son ID' })
+  @ApiResponse({ status: 200, description: 'Événement supprimé avec succès.' })
   @Roles(Role.Admin, Role.User)
   @UseGuards(EventRolesGuard)
   @Delete(':id')

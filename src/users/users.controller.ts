@@ -89,6 +89,11 @@ export class UsersController {
   }
 
   // Afficher tous les événements d'un utilisateur
+  @ApiOperation({ summary: 'Liste des évenements créer par un utilisateur.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Liste retourner avec succès.',
+  })
   @Get(':id/events')
   @Roles(Role.Admin, Role.User)
   async findEventsForUser(@Param('id') id: string) {

@@ -13,7 +13,9 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('API EVENTLY')
-    .setDescription('This is the documentation for the Evently API')
+    .setDescription(
+      "Ceci est la documentation Swagger de l'API Evently, il n'est pas encore possible d'écrire directement dans la base de données depuis le Swagger, je vous invite donc à utiliser un logiciel approprié de type Postman ou Insomnia pour tester l'API.",
+    )
     .setVersion('1.0')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
