@@ -1,6 +1,6 @@
 # EVENTLY
 
-EVENTLY est une application web de gestion d’événements développée dans le cadre d’un projet de fin d’année. Cette README décrit toutes les étapes nécessaires pour cloner, configurer et démarrer l’application en local.
+EVENTLY est une application web de gestion d’événements développée dans le cadre d’un projet de fin d’année. Cet README décrit toutes les étapes nécessaires pour cloner, configurer et démarrer l’application en local.
 
 ---
 
@@ -23,6 +23,8 @@ Avant de démarrer, assurez-vous d’avoir installé sur votre machine :
 - DB_USER : nom d’utilisateur MariaDB / MySQL
 - DB_PASSWORD : mot de passe MariaDB / MySQL
 - DB_NAME : nom de la base de données (ex. evently_db)
+- JWT_SECRET= mettre un chaine de caractère quelconque
+- ACCESS_TOKEN_VALIDITY_DURATION_IN_SEC= il est conseillé de mettre 1500 secondes
 
 ## Configurer la base de données
 
@@ -35,6 +37,10 @@ Puis exécutez la migration avec :
 ## Lancer l'application
 
 npm run start:dev
+
+Une documentation de l'api est disponible à l'url
+
+https://nest-api-event.onrender.com/api-doc
 
 ## Technologies utilisées
 
