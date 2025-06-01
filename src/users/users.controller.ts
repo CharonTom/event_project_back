@@ -17,15 +17,7 @@ import { Roles } from 'src/auth/decorators/roles.decorator';
 import { RolesGuard } from 'src/auth/guards/role.guard';
 import { Role } from 'src/auth/enums/role.enum';
 import { GetUser } from 'src/auth/decorators/user.decorator';
-import {
-  ApiTags,
-  ApiBearerAuth,
-  ApiOperation,
-  ApiResponse,
-  ApiParam,
-  ApiBody,
-} from '@nestjs/swagger';
-import { CreateUserDto } from './dto/create-user.dto';
+import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { EventsService } from '../events/events.service';
 
 @Controller('users')
