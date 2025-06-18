@@ -16,11 +16,11 @@ export class AuthService {
   async validateUser(email: string, password: string): Promise<User> {
     const user: User = await this.usersService.findOneByEmail(email);
     if (!user) {
-      throw new BadRequestException('User not found');
+      throw new BadRequestException('Utilisateur non trouvé');
     }
     const isMatch: boolean = bcrypt.compareSync(password, user.password);
     if (!isMatch) {
-      throw new BadRequestException('Password does not match');
+      throw new BadRequestException('Mot de passe incorrect');
     }
     return user;
   }
@@ -33,7 +33,7 @@ export class AuthService {
   async register(user: RegisterRequestDto): Promise<AccessToken> {
     const existingUser = await this.usersService.findOneByEmail(user.email);
     if (existingUser) {
-      throw new BadRequestException('email already exists');
+      throw new BadRequestException('Email déjà utilisé');
     }
     const hashedPassword = await bcrypt.hash(user.password, 10);
     const newUser = await this.usersService.create({
