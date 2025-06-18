@@ -5,6 +5,8 @@ import {
   IsString,
   IsEnum,
   IsOptional,
+  Length,
+  Matches,
 } from 'class-validator';
 import { Role } from '../../auth/enums/role.enum';
 
@@ -41,9 +43,18 @@ export class RegisterRequestDto {
 
   @IsNotEmpty()
   @IsString()
+  @Length(8, 20, {
+    message: 'Le mot de passe doit contenir entre 8 et 20 caractères',
+  })
+  @Matches(/(?=.*[A-Z])/, {
+    message: 'Le mot de passe doit contenir au moins une majuscule',
+  })
+  @Matches(/(?=.*\d)/, {
+    message: 'Le mot de passe doit contenir au moins un chiffre',
+  })
   password: string; // Le mot de passe en clair (à hacher ensuite)
 
   @IsOptional()
-  @IsEnum(Role) // Utilisez l'énumération Role
-  role?: Role; // Utilisez le type Role
+  @IsEnum(Role)
+  role?: Role;
 }
