@@ -14,7 +14,7 @@ describe('AppController', () => {
     appController = app.get<AppController>(AppController);
   });
 
-  it('should return "The API is running"', () => {
-    expect(appController.getMessage()).toBe('The API is running');
+  it('should return "The API is running !"', () => {
+    expect(appController.getMessage()).toBe('The API is running !');
   });
 });
