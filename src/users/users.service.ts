@@ -17,7 +17,6 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
-  // Removed duplicate implementation of findOneByEmail
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
